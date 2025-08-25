@@ -7,6 +7,7 @@ print(L[0:2])
 
 print(L[:2])
 
+# 倒数切片
 print(L[-1:])
 
 L = list(range(100))
@@ -15,8 +16,10 @@ print(L)
 
 print(L[:10])
 
+# 前10个每两个数取一个
 print('L[:10:2]', L[:10:2])
 
+# 每5个取值
 print('L[::5]', L[::5])
 
 print('L[:]', L[:])

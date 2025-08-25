@@ -69,7 +69,7 @@ def str2int(s):
 print('---------- practice ---------')
 
 
-print('---------- 利用map()函数，把用户输入的不规范的英文名字，变为首字母大写，其他小写的规范名字。输入：['adam', 'LISA', 'barT']，输出：['Adam', 'Lisa', 'Bart'] -------------')
+print('---------- 利用map()函数，把用户输入的不规范的英文名字，变为首字母大写，其他小写的规范名字。输入：["adam", "LISA", "barT"]，输出：["Adam", "Lisa", "Bart"] -------------')
 
 
 def normalize(name):
@@ -105,15 +105,100 @@ else:
     print('测试失败!')
 
 
-print('---------- 利用map和reduce编写一个str2float函数，把字符串'123.456'转换成浮点数123.456 -------------')
+print('---------- 利用map和reduce编写一个str2float函数，把字符串"123.456"转换成浮点数123.456 -------------')
 
 from functools import reduce
 
+# def fn2(x, y):
+#   return x * 0.1 + y
+
 def str2float(s):
+  def char2num(s):
+    return DIGITS[s] if s in DIGITS else s
+
+  is_integer = True
+  decimal_wight = 1
+
+  def combine(x, y):
+    nonlocal is_integer, decimal_wight
+
+    if y == '.':
+      is_integer = False
+      return x
+    if is_integer:
+      return x * 10 + y
+    else:
+      decimal_wight *= 0.1
+      return x + y * decimal_wight
+  
+  return reduce(combine, map(char2num, s))
+
+    
   
 
 print('str2float(\'123.456\') =', str2float('123.456'))
 if abs(str2float('123.456') - 123.456) < 0.00001:
+    print('测试成功!')
+else:
+    print('测试失败!')
+
+
+print('------------------ filter --------------')
+
+def is_odd(x):
+  return x % 2 == 1
+
+print(list(filter(is_odd, [1, 2, 3, 4, 5, 6, 7])))
+
+def not_empty(s):
+  return s and s.strip()
+
+print(list(filter(not_empty, ['A', '', 'B', None, 'C', '  '])))
+
+# 奇数生成器
+def _odd_iter():
+  n = 1
+  while True:
+    n += 2
+    yield n
+
+# 有余数
+def _not_divisible(n):
+  return lambda x: x % n > 0
+
+# 素数生成器
+def primes():
+  yield 2
+  it = _odd_iter()
+  while True:
+    n = next(it)
+    yield n
+    it = filter(_not_divisible(n), it) #过滤n的倍数
+
+for n in primes():
+  if n < 100:
+    print(n)
+  else:
+    break
+
+print('-------------- practice 回数是指从左向右读和从右向左读都是一样的数--------------')
+
+def is_palindrome(n):
+  s = str(n)
+  l = len(s)
+  for i in range(l // 2):
+    if s[i] != s[-(i + 1)]:
+      return False
+  return True
+
+def is_palindrome(n):
+  s = str(n)
+  return s[:] == s[::-1]
+
+# 测试:
+output = filter(is_palindrome, range(1, 1000))
+print('1~1000:', list(output))
+if list(filter(is_palindrome, range(1, 200))) == [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 22, 33, 44, 55, 66, 77, 88, 99, 101, 111, 121, 131, 141, 151, 161, 171, 181, 191]:
     print('测试成功!')
 else:
     print('测试失败!')
